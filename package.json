@@ -1,4 +1,20 @@
 {
+  "name": "express",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm run up && node src/index.js",
+    "dev": "npm run up && nodemon src/index.js",
+    "up": "npx sequelize-cli db:migrate",
+    "down": "npx sequelize-cli db:migrate:undo",
+    "make:migrate": "npx  sequelize migration:generate --migrations-path ./migrations --name"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
   "dependencies": {
     "bcrypt": "^6.0.0",
     "dotenv": "^17.4.2",
@@ -12,19 +28,5 @@
   "devDependencies": {
     "nodemon": "^3.1.14",
     "sequelize-cli": "^6.6.5"
-  },
-  "name": "final_java-script",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "dev": "nodemon src/index.js",
-    "up": "npx sequelize-cli db:migrate",
-    "down": "npx sequelize-cli db:migrate:undo",
-    "ms": "npx sequelize-cli migration:generate --name"
-  },
-  "author": "",
-  "license": "ISC"
+  }
 }

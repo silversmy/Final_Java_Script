@@ -3,4 +3,4 @@ const env = require("./env");
 
 const sequelize = new Sequelize(env.dburl);
 
-module.exports = sequelize
+module.exports = sequelize;
