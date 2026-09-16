@@ -25,9 +25,9 @@ const authorize = (req, res, next) => {
     }
 
     req.user = decoded;
+  next();
   });
 
-  next();
 };
 
 const adminAuth = (req, res, next) => {
