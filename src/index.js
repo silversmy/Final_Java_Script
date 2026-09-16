@@ -12,7 +12,7 @@ const testRouter = require("./routes/test.route");
 const app = express();
 app.use(express.json());
 app.use('/users', userRouter);
-app.use('test', testRouter)
+app.use('/test', testRouter)
 app.use(logger);
 
 
