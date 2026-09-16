@@ -33,8 +33,10 @@ const authorize = (req, res, next) => {
 const adminAuth = (req, res, next) => {
   const user = req.user;
 
-  if(req.user !== 'ADMIN'){
-    return res.status(403).json({error: "You do not have access to this endpoint"});
+  if(req.user.role !== 'ADMIN'){
+    return res.status(403).json({
+      error: "You do not have access to this endpoint"
+    });
   };
 
   next();
