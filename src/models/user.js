@@ -32,6 +32,12 @@ const User = class User extends Model {
       type: DataTypes.STRING,
       allowNull: false,
       defaultValue: 'Temporary123'
+    },
+
+    role:{
+      type:DataTypes.STRING,
+      allowNull:false,
+      defaultValue: 'User'
     }
 
   }, {

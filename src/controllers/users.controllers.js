@@ -72,7 +72,7 @@ const loginUserController = async (req, res) => {
     if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
 
     // sign access token with user's details
-    const accessToken = aToken({ id: userExists.id, email: userExists.email });
+    const accessToken = aToken({ id: userExists.id, email: userExists.email, role: userExists.role });
 
     // return token to user
     return res.status(200).json({ 
