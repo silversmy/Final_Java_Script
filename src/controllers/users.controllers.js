@@ -2,7 +2,9 @@ const {
    createUser,
    findUserByEmail,
    findAllUsers,
-   findUserById
+   findUserById,
+   updateUserById,
+   deleteUserById
 } = require ("../repositories/users.repositories");
 const { registerUserSchema, loginUserSchema } = require ("../validators/users");
 const { hashPassword, comparePassword} = require("../utils/bcrypt");
@@ -131,4 +133,59 @@ const getUserByIdController = async (req, res) => {
   }
 };
 
-module.exports = {registerUserController, loginUserController, getAllUsersController, getUserByIdController}
+const updateUserController = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await updateUserById(id, req.body);
+
+    if (!user) {
+      return res.status(404).json({
+        error: "User not found"
+      });
+    }
+
+    return res.status(200).json({
+      message:"User updated successfully", user
+    })
+  } catch (error) {
+    console.log(`Error updating user, Error: ${error}`);
+
+    return res.status(500).json({
+      error: "internal server error"
+    });
+  }
+};
+
+const deleteUserController = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await deleteUserById(id);
+
+    if (!user) {
+      return res.status(404).json({
+        error:"User not found"
+      });
+    }
+
+    return res.status(200).json({
+      message: "User deleted successfully", user
+    })
+  } catch (error) {
+    console.log(`Error deleting user, Error: ${error}`);
+
+    return res.status(500).json({
+      error: "internal server error"
+    });
+  }
+};
+
+module.exports = {
+  registerUserController,
+  loginUserController,
+  getAllUsersController,
+  getUserByIdController,
+  updateUserController,
+  deleteUserController
+};
