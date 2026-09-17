@@ -1,6 +1,7 @@
 const {
    createUser,
-   findUserByEmail 
+   findUserByEmail,
+   findAllUsers
 } = require ("../repositories/users.repositories");
 const { registerUserSchema, loginUserSchema } = require ("../validators/users");
 const { hashPassword, comparePassword} = require("../utils/bcrypt");
@@ -88,4 +89,21 @@ const loginUserController = async (req, res) => {
   }
 };
 
-module.exports = {registerUserController, loginUserController}
+const getAllUsersController = async (req, res) => {
+  try {
+    const users = await findAllUsers();
+
+    return res.status(200).json({
+      message: "Users fetched successfully",
+      users
+    });
+  } catch (error) {
+    console.log(`Error fetching users. Error: ${error}`);
+
+    return res.status(500).json({
+      error: "Internal server error"
+    });
+  }
+};
+
+module.exports = {registerUserController, loginUserController, getAllUsersController}
