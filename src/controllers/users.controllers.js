@@ -1,7 +1,8 @@
 const {
    createUser,
    findUserByEmail,
-   findAllUsers
+   findAllUsers,
+   findUserById
 } = require ("../repositories/users.repositories");
 const { registerUserSchema, loginUserSchema } = require ("../validators/users");
 const { hashPassword, comparePassword} = require("../utils/bcrypt");
@@ -106,4 +107,28 @@ const getAllUsersController = async (req, res) => {
   }
 };
 
-module.exports = {registerUserController, loginUserController, getAllUsersController}
+const getUserByIdController = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await findUserById(id);
+
+    if (!user) {
+      return res.status(404).json({
+        error: "User not found"
+      });
+    }
+
+    return res.status(200).json({
+      message: "User fetched succesfully", user
+    });
+  } catch (error) {
+    console.log(`Error fetching user, Error: ${error}`);
+
+    return res.status(500).json({
+      error:"Internal server error"
+    });
+  }
+};
+
+module.exports = {registerUserController, loginUserController, getAllUsersController, getUserByIdController}
