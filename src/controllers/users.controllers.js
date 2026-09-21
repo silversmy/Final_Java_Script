@@ -40,7 +40,7 @@ const registerUserController = async (req, res) => {
 
     const user = await createUser(newUser);
 
-    const { password: pass, ...safeUser } = user;
+    const { password: pass, ...safeUser } = user.toJSON();
 
     return res
       .status(201)

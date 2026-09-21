@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const { hashPassword } = require("../utils/bcrypt");
 
 
 const findUserByEmail = async (email) => {
@@ -16,7 +17,7 @@ const findAllUsers = async () => {
 };
 
 const findUserById = async (id) => {
-    return await User.findByPk(id);
+    return await User.findByPk(id, {attributes: { exclude: ["password"] }});
 };
 
 const updateUserById = async(id, userData) => {
@@ -26,17 +27,27 @@ const updateUserById = async(id, userData) => {
         return null;
     }
 
-    return await user.update(userData)
+    const data = { ...userData};
+
+    if(data.password) {
+        data.password = await hashPassword(data.password);
+    }
+
+    await user.update(data);
+
+    const { password, ...safeUser } = user.toJSON();
+
+    return safeUser;
 };
 
 const deleteUserById = async(id) => {
-    const user = await User.findByPk(id);
+    const user = await User.findByPk(id, { attributes: { exclude: ["password"]}});
     
     if(!user) {
         return null;
     }
 
-    await user.destroy()
+    await user.destroy();
 
     return user;
 

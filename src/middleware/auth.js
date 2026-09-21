@@ -30,6 +30,20 @@ const authorize = (req, res, next) => {
 
 };
 
+const ownAccount = (req, res, next) => {
+  if (req.user.role === 'ADMIN') {
+    return next();
+  }
+
+  if (req.user.id !== Number(req.params.id)) {
+    return res.status(403).json({
+      error: "You can only access your own account"
+    });
+  }
+
+  next();
+};
+
 const adminAuth = (req, res, next) => {
   const user = req.user;
 
@@ -42,4 +56,4 @@ const adminAuth = (req, res, next) => {
   next();
 }
 
-module.exports = {logger, authorize, adminAuth};
+module.exports = {logger, authorize, adminAuth, ownAccount};
