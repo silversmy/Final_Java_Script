@@ -6,7 +6,7 @@ const {
    updateUserById,
    deleteUserById
 } = require ("../repositories/users.repositories");
-const { registerUserSchema, loginUserSchema } = require ("../validators/users");
+const { registerUserSchema, loginUserSchema, updateUserSchema } = require ("../validators/users");
 const { hashPassword, comparePassword} = require("../utils/bcrypt");
 const aToken = require("../config/jwt");
 
@@ -137,7 +137,16 @@ const updateUserController = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const user = await updateUserById(id, req.body);
+    const { error, value } = updateUserSchema.validate(req.body);
+
+    if (error) {
+     return res.status(400).json({
+      error: error.message
+  });
+}
+
+
+    const user = await updateUserById(id, value);
 
     if (!user) {
       return res.status(404).json({

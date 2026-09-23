@@ -12,4 +12,15 @@ const loginUserSchema = joi.object({
     password: joi.string().required().min(6).max(8)
 }).strict();
 
-module.exports = {registerUserSchema, loginUserSchema}
+
+const updateUserSchema = joi.object({
+
+    firstName: joi.string(),
+    lastName: joi.string(),
+    email: joi.string().email(),
+    password: joi.string().min(6).max(8)
+}).strict();
+
+
+
+module.exports = {registerUserSchema, loginUserSchema, updateUserSchema}
