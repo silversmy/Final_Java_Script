@@ -6,7 +6,7 @@ const {
    updateUserById,
    deleteUserById
 } = require ("../repositories/users.repositories");
-const { registerUserSchema, loginUserSchema, updateUserSchema } = require ("../validators/users");
+const { registerUserSchema, loginUserSchema, updateUserSchema, paginationSchema } = require ("../validators/users");
 const { hashPassword, comparePassword} = require("../utils/bcrypt");
 const aToken = require("../config/jwt");
 
@@ -94,11 +94,24 @@ const loginUserController = async (req, res) => {
 
 const getAllUsersController = async (req, res) => {
   try {
-    const users = await findAllUsers();
+    const { error, value } = paginationSchema.validate(req.query);
+
+    if (error) {
+      return res.status(400).json({
+        error: error.message
+      });
+    }
+
+    const { page, limit } = value;
+
+    const { count, rows } = await findAllUsers(page, limit);
 
     return res.status(200).json({
       message: "Users fetched successfully",
-      users
+      page,
+      limit,
+      totalUsers: count,
+      users: rows
     });
   } catch (error) {
     console.log(`Error fetching users. Error: ${error}`);
@@ -126,6 +139,12 @@ const getUserByIdController = async (req, res) => {
     });
   } catch (error) {
     console.log(`Error fetching user, Error: ${error}`);
+
+    if (error.name === "SequelizeDatabaseError") {
+      return res.status(400).json({
+        error: "Invalid user ID"
+      });
+    }
 
     return res.status(500).json({
       error:"Internal server error"
@@ -160,6 +179,17 @@ const updateUserController = async (req, res) => {
   } catch (error) {
     console.log(`Error updating user, Error: ${error}`);
 
+    if (error.name === "SequelizeUniqueConstraintError") {
+      return res.status(400).json({
+        error: "Email already exists"
+      });
+    }
+    if (error.name === "SequelizeDatabaseError") {
+      return res.status(400).json({
+        error: "Invalid user ID"
+      });
+    }
+
     return res.status(500).json({
       error: "internal server error"
     });
@@ -183,6 +213,12 @@ const deleteUserController = async (req, res) => {
     })
   } catch (error) {
     console.log(`Error deleting user, Error: ${error}`);
+
+    if (error.name ==="SequelizeDatabaseError") {
+      return res.status(400).json({
+        error: "Invalid user ID"
+      });
+    }
 
     return res.status(500).json({
       error: "internal server error"

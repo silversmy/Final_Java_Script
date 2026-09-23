@@ -10,9 +10,13 @@ const createUser = async (userData) => {
     return await User.create(userData);
 };
 
-const findAllUsers = async () => {
-  return await User.findAll({
-    attributes: { exclude: ['password']}
+const findAllUsers = async (page, limit) => {
+    const offset = (page - 1) * limit;
+
+  return await User.findAndCountAll({
+    attributes: { exclude: ['password']},
+    limit,
+    offset
   });
 };
 

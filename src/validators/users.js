@@ -21,6 +21,10 @@ const updateUserSchema = joi.object({
     password: joi.string().min(6).max(8)
 }).strict();
 
+const paginationSchema = joi.object({
+    page: joi.number().integer().min(1).default(1),
+    limit: joi.number().integer().min(1).max(100).default(10)
+});
 
 
-module.exports = {registerUserSchema, loginUserSchema, updateUserSchema}
+module.exports = {registerUserSchema, loginUserSchema, updateUserSchema, paginationSchema}
