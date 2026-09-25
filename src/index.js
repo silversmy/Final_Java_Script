@@ -4,6 +4,8 @@ const { logger } = require("./middleware/auth");
 const userRouter = require("./routes/user.routes");
 const sequelize = require("./config/sequelize");
 const testRouter = require("./routes/test.route");
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./config/swagger");
 // const { Sequelize, DataTypes } = require("sequelize");
 
 
@@ -11,6 +13,16 @@ const testRouter = require("./routes/test.route");
 
 const app = express();
 app.use(express.json());
+app.use("/swagger-custom.js", express.static("./src/swagger-custom.js"));
+
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, {
+    customJs: "/swagger-custom.js"
+  })
+);
+
 app.use('/users', userRouter);
 app.use('/test', testRouter)
 app.use(logger);

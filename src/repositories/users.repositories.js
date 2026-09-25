@@ -15,6 +15,7 @@ const findAllUsers = async (page, limit) => {
 
   return await User.findAndCountAll({
     attributes: { exclude: ['password']},
+    order: [['id', 'ASC']],
     limit,
     offset
   });
